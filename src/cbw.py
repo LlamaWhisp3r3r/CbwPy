@@ -1,6 +1,4 @@
 import requests
-import time
-
 
 
 class ControlByWeb:
@@ -120,7 +118,7 @@ class ControlByWeb:
 			print("Please provide a proper argument")
 			return None
 	
-	def set_network_settings(self, ip_address="192.168.1.1", subnet_mask="255.255.255.0", gateway="192.168.1.1", dns_server_1="192.168.1.1", dns_server_2="192.168.1.1", http_port_enabled=1, http_port=80, https_port=443, dhcp_enabled=0):
+	def set_network_settings(self, ip_address="192.168.1.2", subnet_mask="255.255.255.0", gateway="192.168.1.1", dns_server_1="192.168.1.1", dns_server_2="192.168.1.1", http_port_enabled=1, http_port=80, https_port=443, dhcp_enabled=0):
 		"""Set new network settings
 
 		Paramters
@@ -180,6 +178,7 @@ class ControlByWeb:
 		dls_start_week=2, dls_start_day=0, dls_start_month=2, dls_end_week=1, dls_end_day=0,
 		dls_end_month=10, ntp_host_name=None, ntp_sync_interval=None, ntp_sync_on_powerup=None,
 		date_month=None, date_day=None, date_year=None, time_hour=None, time_min=None, time_sec=None):
+		""" Updates the date and time"""
 
 		params = {
 			'gen1_timeSource': date_time_preset,
@@ -244,6 +243,8 @@ class ControlByWeb:
 		return self.__send_cbw_update(params, self.___io_update_endpoint)
 	
 	def create_wire_sensor(self, name, wire_id="00-00000000000000", local_wire_number=1, decimal_place=2, offset=0):
+		""" Create a one wire sensor
+		"""
 
 		params = {
 			'spc0_settingsTableNum': 11+self.__wires_added,
