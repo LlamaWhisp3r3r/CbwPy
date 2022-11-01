@@ -41,15 +41,16 @@ class ControlByWeb:
 		headers = {
 			"Cookie": "loginLevel=admin"
 		}
+		proxies = {'http': '127.0.0.1:8080', 'https': '127.0.0.1:8080'}
 
 		if file:
-			return requests.post(url, files=params, headers=headers, timeout=self.__timeout)
+			return requests.post(url, files=params, headers=headers, proxies=proxies, timeout=self.__timeout)
 		else:
 			headers["Content-Type"] = "application/x-www-form-urlencoded"
 			if get:
-				return requests.get(url, data=params, headers=headers, timeout=self.__timeout)
+				return requests.get(url, data=params, headers=headers, proxies=proxies, timeout=self.__timeout)
 			else:
-				return requests.post(url, data=params, headers=headers, timeout=self.__timeout)
+				return requests.post(url, data=params, headers=headers, proxies=proxies, timeout=self.__timeout)
 
 	def set_email_alerts(self, smtp_server, host_username, host_password, host_sender_addr, email_addrs, port=2525, security=0, email_content_type=0):
 		"""Setup email alerts
