@@ -21,21 +21,22 @@ class ControlByWeb:
 		self.__task_update_endpoint = "/taskUpdate.srv"
 		self.__logging_endpoint = "/logging.srv"
 		self.__control_page_endpoint = "/ctrl-setup.srv"
+		self.__overview_endpoint = "/overview.json"
 
-	def __send_cbw_update(self, params, endpoint, file=False):
+	def __send_cbw_update(self, params, endpoint, file=False, **kwargs):
 		try:
 			url = "http://" + self.username + ":" + self.password + "@" + self.ip + endpoint
-			r = self.__send_request(url, params, file=file)
+			r = self.__send_request(url, params, file=file, **kwargs)
 			if r.status_code == 401:
 				url = "http://" + self.username + ":" + self.__default_password + "@" + self.ip + endpoint
-				r = self.__send_request(url, params, file=file)
+				r = self.__send_request(url, params, file=file, **kwargs)
 			return r
 		except Exception as e:
 			print(e)
 			return None
 		
 
-	def __send_request(self, url, params, file=False):
+	def __send_request(self, url, params, file=False, get=False):
 
 		headers = {
 			"Cookie": "loginLevel=admin"
@@ -45,7 +46,10 @@ class ControlByWeb:
 			return requests.post(url, files=params, headers=headers, timeout=self.__timeout)
 		else:
 			headers["Content-Type"] = "application/x-www-form-urlencoded"
-			return requests.post(url, data=params, headers=headers, timeout=self.__timeout)
+			if get:
+				return requests.get(url, data=params, headers=headers, timeout=self.__timeout)
+			else:
+				return requests.post(url, data=params, headers=headers, timeout=self.__timeout)
 
 	def set_email_alerts(self, smtp_server, host_username, host_password, host_sender_addr, email_addrs, port=2525, security=0, email_content_type=0):
 		"""Setup email alerts
@@ -394,4 +398,8 @@ class ControlByWeb:
 		}
 
 		return self.__send_cbw_update(params, self.__control_page_endpoint)
+
+	def get_device_information(self):
+     
+		return self.__send_cbw_update({}, self.__overview_endpoint, get=True)
 
