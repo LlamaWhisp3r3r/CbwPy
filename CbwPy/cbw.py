@@ -3,10 +3,11 @@ import requests
 
 class ControlByWeb:
 
-	def __init__(self, ip, username, password, timeout=10):
+	def __init__(self, ip, username, password, port=80, timeout=10):
 		self.ip = ip
 		self.username = username
 		self.password = password
+		self.port = port
 		self.__timeout = timeout
 		self.__wires_added = 0
 		self.__scheduled_added = 0
@@ -25,10 +26,10 @@ class ControlByWeb:
 
 	def __send_cbw_update(self, params, endpoint, file=False, **kwargs):
 		try:
-			url = "http://" + self.username + ":" + self.password + "@" + self.ip + endpoint
+			url = "http://" + self.username + ":" + self.password + "@" + self.ip + ":" + self.port + endpoint
 			r = self.__send_request(url, params, file=file, **kwargs)
 			if r.status_code == 401:
-				url = "http://" + self.username + ":" + self.__default_password + "@" + self.ip + endpoint
+				url = "http://" + self.username + ":" + self.__default_password + "@" + self.ip + ":" + self.port + endpoint
 				r = self.__send_request(url, params, file=file, **kwargs)
 			return r
 		except Exception as e:
