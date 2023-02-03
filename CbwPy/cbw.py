@@ -1,14 +1,14 @@
-import requests
-
+from requests import request
 
 class ControlByWeb:
 
-	def __init__(self, ip, username, password, port=80, timeout=10):
+	def __init__(self, ip, username, password, port=80, timeout=10, proxies=None):
 		self.ip = ip
 		self.username = username
 		self.password = password
 		self.port = port
 		self.__timeout = timeout
+		self.__proxies = proxies
 		self.__wires_added = 0
 		self.__scheduled_added = 0
 		self.__conditional_added = 0
@@ -22,35 +22,30 @@ class ControlByWeb:
 		self.__task_update_endpoint = "/taskUpdate.srv"
 		self.__logging_endpoint = "/logging.srv"
 		self.__control_page_endpoint = "/ctrl-setup.srv"
+		self.__control_page_information_endpoint = "/ctrl-page.json"
 		self.__overview_endpoint = "/overview.json"
 
-	def __send_cbw_update(self, params, endpoint, file=False, **kwargs):
+	def __send_cbw_update(self, method, endpoint, **kwargs):
 		try:
-			url = "http://" + self.username + ":" + self.password + "@" + self.ip + ":" + self.port + endpoint
-			r = self.__send_request(url, params, file=file, **kwargs)
+			url = "http://" + self.username + ":" + self.password + "@" + self.ip + ":" + str(self.port) + endpoint
+			r = self.__send_request(method, url, **kwargs)
 			if r.status_code == 401:
-				url = "http://" + self.username + ":" + self.__default_password + "@" + self.ip + ":" + self.port + endpoint
-				r = self.__send_request(url, params, file=file, **kwargs)
+				print("In If statement")
+				url = "http://" + self.username + ":" + self.__default_password + "@" + self.ip + ":" + str(self.port) + endpoint
+				r = self.__send_request(method, url, **kwargs)
 			return r
 		except Exception as e:
 			print(e)
 			return None
 		
 
-	def __send_request(self, url, params, file=False, get=False):
+	def __send_request(self, method, url, **kwargs):
 
 		headers = {
 			"Cookie": "loginLevel=admin"
 		}
-
-		if file:
-			return requests.post(url, files=params, headers=headers, timeout=self.__timeout)
-		else:
-			headers["Content-Type"] = "application/x-www-form-urlencoded"
-			if get:
-				return requests.get(url, data=params, headers=headers, timeout=self.__timeout)
-			else:
-				return requests.post(url, data=params, headers=headers, timeout=self.__timeout)
+		
+		return request(method, url, headers=headers, timeout=self.__timeout, proxies=self.__proxies, **kwargs)
 
 	def set_email_alerts(self, smtp_server, host_username, host_password, host_sender_addr, email_addrs, port=2525, security=0, email_content_type=0):
 		"""Setup email alerts
@@ -93,7 +88,7 @@ class ControlByWeb:
 				params["gen1_smtpPassword"] = host_password
 				params["gen1_smtpSenderAddress"] = host_sender_addr
 				params["gen1_emailContentType"] = email_content_type
-				return self.__send_cbw_update(params, self.__email_endpoint)
+				return self.__send_cbw_update("POST", self.__email_endpoint, data=params)
 
 			else:
 				print("Please provide at least 1 but not more than 8 eail address")
@@ -118,12 +113,13 @@ class ControlByWeb:
 
 		if isinstance(file_location, str):
 			params = {'fileCustomLogo': open(file_location, 'rb')}
-			return self.__send_cbw_update(params, self.__file_upload_endpoint, file=True)
+			return self.__send_cbw_update("POST", self.__file_upload_endpoint, file=params)
 		else:
 			print("Please provide a proper argument")
 			return None
 	
-	def set_network_settings(self, ip_address="192.168.1.2", subnet_mask="255.255.255.0", gateway="192.168.1.1", dns_server_1="192.168.1.1", dns_server_2="192.168.1.1", http_port_enabled=1, http_port=80, https_port=443, dhcp_enabled=0):
+	def set_network_settings(self, ip_address="192.168.1.2", subnet_mask="255.255.255.0", gateway="192.168.1.1",
+								dns_server_1="192.168.1.1", dns_server_2="192.168.1.1", http_port_enabled=1, http_port=80, https_port=443, dhcp_enabled=0):
 		"""Set new network settings
 
 		Paramters
@@ -165,7 +161,7 @@ class ControlByWeb:
 			'gen1_httpsPort': https_port
 		}
 
-		return self.__send_cbw_update(params, self.__network_endpoint)
+		return self.__send_cbw_update("POST", self.__network_endpoint, data=params)
 
 	def update_passwords(self, admin_password, manager_password=None, user_password=None):
 		params = {'gen1_adminPswd': admin_password}
@@ -177,12 +173,12 @@ class ControlByWeb:
 			params['gen1_userPswdEnabled'] = 1
 			params['gen1_userPswd'] = user_password
 		
-		return self.__send_cbw_update(params, self.__password_endpoint)
+		return self.__send_cbw_update("POST", self.__password_endpoint, data=params)
 
 	def update_date_time(self, date_time_preset, utc_offset_hour=-5, utc_offset_min=0, dls_enabled=1,
-		dls_start_week=2, dls_start_day=0, dls_start_month=2, dls_end_week=1, dls_end_day=0,
-		dls_end_month=10, ntp_host_name=None, ntp_sync_interval=None, ntp_sync_on_powerup=None,
-		date_month=None, date_day=None, date_year=None, time_hour=None, time_min=None, time_sec=None):
+							dls_start_week=2, dls_start_day=0, dls_start_month=2, dls_end_week=1, dls_end_day=0,
+							dls_end_month=10, ntp_host_name=None, ntp_sync_interval=None, ntp_sync_on_powerup=None,
+							date_month=None, date_day=None, date_year=None, time_hour=None, time_min=None, time_sec=None):
 		""" Updates the date and time"""
 
 		params = {
@@ -215,7 +211,7 @@ class ControlByWeb:
 			print("Please provide correct arguments")
 			return None
 
-		return self.__send_cbw_update(params, self.__date_time_endpoint)
+		return self.__send_cbw_update("POST", self.__date_time_endpoint, data=params)
 	
 	def update_relay_info(self, relay_number, name, on_status_text="On", off_status_text="Off", pulse_time=1, power_up_state=0, group=0, make_exclusive=0):
 
@@ -230,7 +226,7 @@ class ControlByWeb:
 			'ios0_relayMakeExclusive': make_exclusive
 		}
 
-		return self.__send_cbw_update(params, self.___io_update_endpoint)
+		return self.__send_cbw_update("POST", self.___io_update_endpoint, data=params)
 
 	def update_digital_inputs(self, input_number, name, on_status_text="On", off_status_text="Off", mode=0, hold_time=20, measure_on_time=0, measure_total_on_time=0):
 
@@ -245,7 +241,7 @@ class ControlByWeb:
 			'ios0_measureTotalOnTime': measure_total_on_time
 		}
 
-		return self.__send_cbw_update(params, self.___io_update_endpoint)
+		return self.__send_cbw_update("POST", self.___io_update_endpoint, data=params)
 	
 	def create_wire_sensor(self, name, wire_id="00-00000000000000", local_wire_number=1, decimal_place=2, offset=0):
 		""" Create a one wire sensor
@@ -264,7 +260,7 @@ class ControlByWeb:
 			'ios0_devIONum': 1
 		}
 
-		return self.__send_cbw_update(params, self.___io_update_endpoint)
+		return self.__send_cbw_update("POST", self.___io_update_endpoint, data=params)
 	
 	def update_vin(self, name):
 
@@ -280,7 +276,7 @@ class ControlByWeb:
 			"ios0_ioTypeID": 11
 		}
 
-		return self.__send_cbw_update(params, self.___io_update_endpoint)
+		return self.__send_cbw_update("POST", self.___io_update_endpoint, data=params)
 	
 	def create_scheduled_task(self, name, action1, action1_function, action1_function_argument, run_mode=1,
 		start_date_month=0, start_date_day=1, start_date_year=2020, start_time_type=0, start_time_hour=8,
@@ -309,7 +305,7 @@ class ControlByWeb:
 
 		self.__scheduled_added += 1
 
-		return self.__send_cbw_update(params, self.__task_update_endpoint)
+		return self.__send_cbw_update("POST", self.__task_update_endpoint, data=params)
 	
 	def create_conditional_task(self, name, condition1=11, condition1_comparison=2, condition1_value=100, dead_pan=0, action1=7, action1_function=2, action_email=0):
 		
@@ -328,7 +324,7 @@ class ControlByWeb:
 
 		self.__conditional_added += 1
 
-		return self.__send_cbw_update(params, self.__task_update_endpoint)
+		return self.__send_cbw_update("POST", self.__task_update_endpoint, data=params)
 
 	def update_logging(self, enable_logging, logging_interval=(20, 0), power_up_state=1, relay1=(0, 0),
 		relay2=(0, 0), relay3=(0, 0), relay4=(0, 0), digital1=(0, 0), digital2=(0, 0),digital3=(0, 0), digital4=(0, 0),
@@ -370,7 +366,7 @@ class ControlByWeb:
 			"gen1_emailLogEnabled":  email_logging,
 		}
 
-		return self.__send_cbw_update(params, self.__logging_endpoint)
+		return self.__send_cbw_update("POST", self.__logging_endpoint, data=params)
 
 	def add_control_page_element(self, id):
 
@@ -378,7 +374,7 @@ class ControlByWeb:
 			'spc0_addControlIOID': id
 		}
 
-		return self.__send_cbw_update(params, self.__control_page_endpoint)
+		return self.__send_cbw_update("POST", self.__control_page_endpoint, data=params)
 	
 	def delete_control_page_element(self, id):
 
@@ -386,7 +382,35 @@ class ControlByWeb:
 			'spc0_delControl': id
 		}
 
-		return self.__send_cbw_update(params, self.__control_page_endpoint)
+		return self.__send_cbw_update("POST", self.__control_page_endpoint, data=params)
+
+	def update_control_page_element(self, table_number, io_type_id=None, enabled=None, status_enabled=None, on_status_color=None, off_status_color=None,
+									on_button_text=None, on_button_value=None, on_button_enabled=None, off_button_text=None, off_button_value=None,
+									off_button_enabled=None, toggle_button_text=None, toggle_button_value=None, toggle_enabled=None,
+									pulse_button_text=None, pulse_button_value=None, pulse_button_enabled=None):
+		
+		params = {
+			"spc0_settingsTableNum": table_number,
+			"ios0_ioTypeID": io_type_id,
+			"ctl0_enabled": enabled,
+			"ctl0_statusEnabled": status_enabled,
+			"ctl0_onStatusColor": on_status_color,
+			"ctl0_offStatusColor": off_status_color,
+			"ctl0_buttonText1": on_button_text,
+			"ctl0_buttonValue1": on_button_value,
+			"ctl0_buttonEnabled1": on_button_enabled,
+			"ctl0_buttonText2": off_button_text,
+			"ctl0_buttonValue2": off_button_value,
+			"ctl0_buttonEnabled2": off_button_enabled,
+			"ctl0_buttonEnabled3": pulse_button_enabled,
+			"ctl0_buttonText3": pulse_button_text,
+			"ct10_buttonValue3": pulse_button_value,
+			"ctl0_buttonText4": toggle_button_text,
+			"ctl0_buttonEnabled4": toggle_enabled,
+			"ct10_buttonValue4": toggle_button_value
+		}
+
+		return self.__send_cbw_update("POST", self.__control_page_endpoint, data=params)
 	
 	def submit_control_page(self, page_header="ControlByWeb", refresh_rate=3, page_footer="Insert Something Here", show_custom_logo=1, control_page_order=""):
 
@@ -398,9 +422,12 @@ class ControlByWeb:
 			"spc0_ctrlOrder": control_page_order 
 		}
 
-		return self.__send_cbw_update(params, self.__control_page_endpoint)
+		return self.__send_cbw_update("POST", self.__control_page_endpoint, data=params)
 
 	def get_device_information(self):
      
-		return self.__send_cbw_update({}, self.__overview_endpoint, get=True)
+		return self.__send_cbw_update("GET", self.__overview_endpoint, data={})
+
+	def get_control_page_details(self, table_number):
+		pass
 
