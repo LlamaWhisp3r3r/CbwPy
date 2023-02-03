@@ -23,7 +23,9 @@ class ControlByWeb:
 		self.__logging_endpoint = "/logging.srv"
 		self.__control_page_endpoint = "/ctrl-setup.srv"
 		self.__control_page_information_endpoint = "/ctrl-page.json"
+		self.__edit_control_element_endpoint = "/editRelayCtrl.srv"
 		self.__overview_endpoint = "/overview.json"
+		self.__relay_update_endpoint = "/customState.json"
 
 	def __send_cbw_update(self, method, endpoint, **kwargs):
 		try:
@@ -113,7 +115,7 @@ class ControlByWeb:
 
 		if isinstance(file_location, str):
 			params = {'fileCustomLogo': open(file_location, 'rb')}
-			return self.__send_cbw_update("POST", self.__file_upload_endpoint, file=params)
+			return self.__send_cbw_update("POST", self.__file_upload_endpoint, files=params)
 		else:
 			print("Please provide a proper argument")
 			return None
@@ -429,5 +431,17 @@ class ControlByWeb:
 		return self.__send_cbw_update("GET", self.__overview_endpoint, data={})
 
 	def get_control_page_details(self, table_number):
-		pass
+		
+		params = {'spc1_settingsTableNum': table_number}
+
+		return self.__send_cbw_update("GET", self.__edit_control_element_endpoint, params=params)
+
+	def get_active_result_of_control_page(self):
+    
+		params = {
+			'showUnits': 1,
+			'showColors': 1
+		}
+  
+		return self.__send_cbw_update("GET", self.__relay_update_endpoint, params=params)
 
