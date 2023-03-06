@@ -756,6 +756,18 @@ class ControlByWeb:
         """
         return self.__send_cbw_update("GET", self.__overview_endpoint, data={}, check=False)
 
+    def get_serial_number(self):
+        """Summary
+
+        Returns
+        -------
+
+        """
+
+        device_information = self.get_device_information()
+        if device_information.status_code == 200:
+            return device_information.json()['x spc1_serNum'][0]
+
     def get_control_page_details(self, table_number):
         """Summary
 
@@ -797,4 +809,3 @@ class ControlByWeb:
         """
         params = {'fileBasicScript': open(file_location), 'gen1_basicScriptEnabled': script_enabled}
         return self.__send_cbw_update("POST", self.__file_upload_endpoint, files=params)
-
