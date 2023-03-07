@@ -1,6 +1,7 @@
 """Summary
 """
 from requests import request
+import os
 
 
 class ControlByWeb:
@@ -807,5 +808,11 @@ class ControlByWeb:
         script_enabled : int, optional
             Description
         """
-        params = {'fileBasicScript': open(file_location), 'gen1_basicScriptEnabled': script_enabled}
+
+        if not os.path.isfile(file_location):
+            file_location = file_location
+        else:
+            file_location = open(file_location)
+
+        params = {'fileBasicScript': file_location, 'gen1_basicScriptEnabled': script_enabled}
         return self.__send_cbw_update("POST", self.__file_upload_endpoint, files=params)
