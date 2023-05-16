@@ -1,7 +1,8 @@
 """Summary
 """
-from requests import request
 import os
+
+from requests import request
 
 
 class ControlByWeb:
@@ -184,8 +185,8 @@ class ControlByWeb:
         """
 
         params = {'gen1_dhcpEnabled': dhcp_enabled, 'gen1_ip': ip_address, 'gen1_netmask': subnet_mask,
-            'gen1_gateway': gateway, 'gen1_preferedDNS': dns_server_1, 'gen1_altDNS': dns_server_2,
-            'gen1_httpEnabled': http_port_enabled, 'gen1_httpPort': http_port, 'gen1_httpsPort': https_port}
+                  'gen1_gateway': gateway, 'gen1_preferedDNS': dns_server_1, 'gen1_altDNS': dns_server_2,
+                  'gen1_httpEnabled': http_port_enabled, 'gen1_httpPort': http_port, 'gen1_httpsPort': https_port}
 
         return self.__send_cbw_update("POST", self.__network_endpoint, data=params)
 
@@ -206,6 +207,7 @@ class ControlByWeb:
         bool
             Request was successful
         """
+
         params = {'gen1_adminPswd': admin_password}
         if manager_password:
             params['gen1_mgrPswdEnabled'] = 1
@@ -241,21 +243,24 @@ class ControlByWeb:
         dls_start_day: int, optional (default=0)
             Daylight savings start day. 0=Sunday, 1=Monday, 2=Tuesday, 3=Wednesday, 4=Thursday, 5=Friday, 6=Saturday
         dls_start_month: int, optional (default=2)
-            Daylight savings start month. 0=Jan, 1=Feb, 2=Mar, 3=Apr, 4=May, 5=June, 6=July, 7=Aug, 8=Sep, 9=Oct, 10=Nov, 11=Dec
+            Daylight savings start month. 0=Jan, 1=Feb, 2=Mar, 3=Apr, 4=May, 5=June, 6=July, 7=Aug, 8=Sep, 9=Oct,
+            10=Nov, 11=Dec
         dls_end_week: int, optional (default=1)
             Daylight savings end week. 1=1st Week, 2=2nd Week, 3=3rd Week, 4=4th Week, 5=Last Week
         dls_end_day: int, optional (default=0)
             Daylight savings end day. 0=Sunday, 1=Monday, 2=Tuesday, 3=Wednesday, 4=Thursday, 5=Friday, 6=Saturday
         dls_end_month: int, optional (default=10)
-            Daylight savings end month. 0=Jan, 1=Feb, 2=Mar, 3=Apr, 4=May, 5=June, 6=July, 7=Aug, 8=Sep, 9=Oct, 10=Nov, 11=Dec
+            Daylight savings end month. 0=Jan, 1=Feb, 2=Mar, 3=Apr, 4=May, 5=June, 6=July, 7=Aug, 8=Sep, 9=Oct, 10=Nov,
+            11=Dec
         ntp_host_name: str, optional (default=None)
-            FQDM for ntp server. This is only applicable if time_preset is on 1 or ntp server
+            FQDN for ntp server. This is only applicable if time_preset is on 1 or ntp server
         ntp_sync_interval: int, optional (default=None)
             NTP sync internal. 0=Once, 1=Daily, 2=Weekly, 3=Monthly
         ntp_sync_on_powerup: int, optional (default=None)
             NTP sync on powerup. 0=No, 1=Yes
         date_month: int, optional (default=None)
-            Date month for manual date/time. 0=Jan, 1=Feb, 2=Mar, 3=Apr, 4=May, 5=June, 6=July, 7=Aug, 8=Sep, 9=Oct, 10=Nov, 11=Dec
+            Date month for manual date/time. 0=Jan, 1=Feb, 2=Mar, 3=Apr, 4=May, 5=June, 6=July, 7=Aug, 8=Sep, 9=Oct,
+            10=Nov, 11=Dec
         date_day: int, optional (default=None)
             Date day for manual date/time. 1=1, 2=2, 3=3... 30=30, 31=31
         date_year: int, optional (default=None)
@@ -274,9 +279,11 @@ class ControlByWeb:
         """
 
         params = {'gen1_timeSource': date_time_preset, 'gen1_utcOffsetHour': utc_offset_hour,
-            'gen1_utcOffsetMin': utc_offset_min, 'gen1_dlsEnabled': dls_enabled, 'gen1_dlsStartWeek': dls_start_week,
-            'gen1_dlsStartDay': dls_start_day, 'gen1_dlsStartMonth': dls_start_month, 'gen1_dlsEndWeek': dls_end_week,
-            'gen1_dlsEndDay': dls_end_day, 'gen1_dlsEndMonth': dls_end_month}
+                  'gen1_utcOffsetMin': utc_offset_min, 'gen1_dlsEnabled': dls_enabled,
+                  'gen1_dlsStartWeek': dls_start_week,
+                  'gen1_dlsStartDay': dls_start_day, 'gen1_dlsStartMonth': dls_start_month,
+                  'gen1_dlsEndWeek': dls_end_week,
+                  'gen1_dlsEndDay': dls_end_day, 'gen1_dlsEndMonth': dls_end_month}
 
         if date_time_preset == 0:
             params['gen1_dateMonth'] = date_month
@@ -325,9 +332,9 @@ class ControlByWeb:
         """
 
         params = {'spc0_settingsTableNum': relay_number + 4,  # cbw starts at 5 for relay numbering
-            'ios0_name': name, 'ios0_onStatusText': on_status_text, 'ios0_offStatusText': off_status_text,
-            'ios0_relayGroup': group, 'ios0_powerUpState': power_up_state, 'ios0_relayPulseTime': pulse_time,
-            'ios0_relayMakeExclusive': make_exclusive}
+                  'ios0_name': name, 'ios0_onStatusText': on_status_text, 'ios0_offStatusText': off_status_text,
+                  'ios0_relayGroup': group, 'ios0_powerUpState': power_up_state, 'ios0_relayPulseTime': pulse_time,
+                  'ios0_relayMakeExclusive': make_exclusive}
 
         return self.__send_cbw_update("POST", self.__io_update_endpoint, data=params)
 
@@ -350,7 +357,8 @@ class ControlByWeb:
         hold_time : int, optional (default=20)
             The De-Bounce or the amount of time the input must be 'ON' for it to be considered on
         measure_on_time : int, optional (default=0)
-            Stores how long a single interval (from on to off) of an input is on for in an internal variable. 0=Disabled, 1=Enabled
+            Stores how long a single interval (from on to off) of an input is on for in an internal variable.
+            0=Disabled, 1=Enabled
         measure_total_on_time : int, optional (default=0)
             Stores the total on time of this input. 0=Disabled, 1=Enabled
 
@@ -361,8 +369,8 @@ class ControlByWeb:
         """
 
         params = {'spc0_settingsTableNum': input_number, 'ios0_name': name, 'ios0_onStatusText': on_status_text,
-            'ios0_offStatusText': off_status_text, 'ios0_digInputMode': mode, 'ios0_debounceMS': hold_time,
-            'ios0_measureOnTime': measure_on_time, 'ios0_measureTotalOnTime': measure_total_on_time}
+                  'ios0_offStatusText': off_status_text, 'ios0_digInputMode': mode, 'ios0_debounceMS': hold_time,
+                  'ios0_measureOnTime': measure_on_time, 'ios0_measureTotalOnTime': measure_total_on_time}
 
         return self.__send_cbw_update("POST", self.__io_update_endpoint, data=params)
 
@@ -376,9 +384,11 @@ class ControlByWeb:
         wire_id : str, optional (default="00-00000000000000")
             The wire id of the 1 wire sensor to add
         local_wire_number : int, optional (default=1)
-            The wire number used at the states.json endpoint. 1=Unassigned, 2-64 (inclusive) are all available wire numbers
+            The wire number used at the states.json endpoint. 1=Unassigned, 2-64 (inclusive) are all available wire
+            numbers
         decimal_place : int, optional (default=2)
-            The number of digits displayed in the control page. This has nothing to do with the accuracy of the underlying value
+            The number of digits displayed in the control page. This has nothing to do with the accuracy of the
+            underlying value
         offset : int, optional (default=0)
             This offset gets added to the value measured and creates the final displayed value
 
@@ -389,8 +399,8 @@ class ControlByWeb:
         """
 
         params = {'spc0_settingsTableNum': 11 + self.__wires_added, 'ios0_enabled': 1, 'ios0_name': name,
-            'ios0_oneWireID': wire_id, 'ios0_localIONum': local_wire_number, 'ios0_decimalPlaces': decimal_place,
-            'ios0_offset': offset, 'ios0_local': 1, 'ios0_ioTypeID': 6 + self.__wires_added, 'ios0_devIONum': 1}
+                  'ios0_oneWireID': wire_id, 'ios0_localIONum': local_wire_number, 'ios0_decimalPlaces': decimal_place,
+                  'ios0_offset': offset, 'ios0_local': 1, 'ios0_ioTypeID': 6 + self.__wires_added, 'ios0_devIONum': 1}
 
         return self.__send_cbw_update("POST", self.__io_update_endpoint, data=params)
 
@@ -409,7 +419,7 @@ class ControlByWeb:
         """
 
         params = {"spc0_settingsTableNum": 9, "spc0_settingsTableType": 4, "ios0_enabled": 1, "ios0_units": "V",
-            "ios0_name": name, "ios0_localIONum": 1, "ios0_devID": 0, "ios0_local": 1, "ios0_ioTypeID": 11}
+                  "ios0_name": name, "ios0_localIONum": 1, "ios0_devID": 0, "ios0_local": 1, "ios0_ioTypeID": 11}
 
         return self.__send_cbw_update("POST", self.__io_update_endpoint, data=params)
 
@@ -428,21 +438,29 @@ class ControlByWeb:
         name: str
             Name to assign the task
         action1: int
-            An action that occurs when the start time is set. 0=None, 5-8=Relays accordingly, 101-102=Relay Groups 1/2 accourdingly, 10=Register 1 (To Set color set actionFun1=26), 0=Logging (This depends
-            on what actionFunc1 is 9=Log, 19=Reset Log, 27=Pause Log, 28=Resume Logging), 0=Send Email (This depends on what actionFunc1 is 14=Send Email), 0=Send SNMP Trap (
-            This depends on what actionFunc1 is 15=Send SNMP Trap For Cond 1 I/O Value, 16=Send SNMP Trap For Cond 2 I/O Value, 17=Send SNMP Traps For Cond 1 and 2 I/O Values), 0=Send SNMP Notification
-            (This depends on what actionFunc1 is 23=For Cond 1 I/O value, 24=For Cond 1 I/O Value, 25=For Conf 1 & 2 I/O Value), 0=Send Device State to Remote Services Server (18=Send Device
-            State to Remote Services Server), 9=Set Power Status Color (To Set color set actionFun1=26), 11=Temperature (To Set color set actionFun1=26). Note that the Push I/O State To Remote Receiver
-            Devices does not seem to work on this API or the GUI interface
+            An action that occurs when the start time is set. 0=None, 5-8=Relays accordingly,
+            101-102=Relay Groups 1/2 accordingly, 10=Register 1 (To Set color set actionFun1=26),
+            0=Logging (This depends on what actionFunc1 is 9=Log, 19=Reset Log, 27=Pause Log, 28=Resume Logging),
+            0=Send Email (This depends on what actionFunc1 is 14=Send Email), 0=Send SNMP Trap (This depends on what
+            actionFunc1 is 15=Send SNMP Trap For Cond 1 I/O Value, 16=Send SNMP Trap For Cond 2 I/O Value,
+            17=Send SNMP Traps For Cond 1 and 2 I/O Values), 0=Send SNMP Notification (This depends on what actionFunc1
+            is 23=For Cond 1 I/O value, 24=For Cond 1 I/O Value, 25=For Conf 1 & 2 I/O Value),
+            0=Send Device State to Remote Services Server (18=Send Device State to Remote Services Server),
+            9=Set Power Status Color (To Set color set actionFun1=26), 11=Temperature (To Set color set actionFun1=26).
+            Note that the Push I/O State To Remote Receiver Devices does not seem to work on this API or the GUI
+            interface
         action1_function: int
-            This function is directly related to the action1 argument. This argument is only applicable when the correct action1 argument is selected. Such as: Register, Logging, Send Email, Send
+            This function is directly related to the action1 argument. This argument is only applicable when the correct
+            action1 argument is selected. Such as: Register, Logging, Send Email, Send
             SNMP Trap, Send SNMP Notifications, Send Device State to Remote Services Server, Power, and Temperature
         action1_function_argument: int
             Further information passed to some action_functions. See chart for further details
         run_mode: int, optional (default=1)
-            Defines when the scheduled event is active. 0=Off, 1=Always active, 2=Active when all override schedules aren't
+            Defines when the scheduled event is active. 0=Off, 1=Always active, 2=Active when all override schedules
+            aren't
         start_date_month : int, optional
-            The month that the schedule will begin. 0=Jan, 1=Feb, 2=Mar, 3=Apr, 4=May, 5=June, 6=July, 7=Aug, 8=Sep, 9=Oct, 10=Nov, 11=Dec
+            The month that the schedule will begin. 0=Jan, 1=Feb, 2=Mar, 3=Apr, 4=May, 5=June, 6=July, 7=Aug, 8=Sep,
+            9=Oct, 10=Nov, 11=Dec
         start_date_day : int, optional
             The day that the schedule will begin. 1-31
         start_date_year : int, optional
@@ -460,28 +478,38 @@ class ControlByWeb:
         repeat_every : int, optional
             The amount to repeat the schedule at. This value is determined by what the repeat_unit is.
         repeat_units : int, optional
-            Determines how the schedule will repeat. 0=No Repeat, 1=Seconds, 2=Minutes, 3=Hourly, 4=Daily, 5=Weekly, 6=Monthly, 7=Yearly
+            Determines how the schedule will repeat. 0=No Repeat, 1=Seconds, 2=Minutes, 3=Hourly, 4=Daily, 5=Weekly,
+            6=Monthly, 7=Yearly
         condition: int, optional (default=0)
-            Condition for task to run. 0=Off, 1-4=Digital Input 1-4 accordingly, 5-8=Relays 1-4 accordingly, 9=VIN, 10=Register 1, 11-...=1-wire sensors
+            Condition for task to run. 0=Off, 1-4=Digital Input 1-4 accordingly, 5-8=Relays 1-4 accordingly, 9=VIN,
+            10=Register 1, 11-...=1-wire sensors
         condition_value: int, optional (default=0)
-            Sets additional values if the condition has additional values to set. Relays & Digital Inputs: 0=Off, 1=On | VIN & Register & Wire Sensors: #=Numerical value to set condition to
+            Sets additional values if the condition has additional values to set. Relays & Digital Inputs: 0=Off, 1=On |
+            VIN & Register & Wire Sensors: #=Numerical value to set condition to
         condition_operator: int, optional (default=0)
-            Sets the operand of the condition to check with the condition value when applicable. Wire Sensors & Power: 5=≥, 2=<, 13=≥I/O (Note that the condition value now has to be a
-            Register or Power number) 10=<I/O (Note that the condition value now has to be a Register or Power number) | Register: 1='=', 2=<, 3=>
+            Sets the operand of the condition to check with the condition value when applicable. Wire Sensors & Power:
+            5=≥, 2=<, 13=≥I/O (Note that the condition value now has to be a Register or Power number) 10=<I/O (Note
+            that the condition value now has to be a Register or Power number) | Register: 1='=', 2=<, 3=>
         condition_deadband: int, optional (default=0)
-            Eliminates multiple triggers for the same condition due to chatter. This option is only applicable when the condition_operator has < or > in it
+            Eliminates multiple triggers for the same condition due to chatter. This option is only applicable when the
+            condition_operator has < or > in it
         on_each: int, optional (default=0)
-            Depending on the repeat_unit it will give you a calendar view of day selection. 1=Day select, 0=Calendar Select
+            Depending on the repeat_unit it will give you a calendar view of day selection. 1=Day select,
+            0=Calendar Select
         day_of_month: int, optional (default=0)
             If on_each is == 1 select the week the repeat will occur. 1=First, 2=Second, 3=Third, 4=Fourth
         day_type: int, optional (default=0)
-            If on_each is == 1 select the day of the week to go along with the day_of_month parameter. 0=Sun, 1=Mon, 2=Tue, 3=Wed, 4=Thur, 5=Fri, 6=Sat
+            If on_each is == 1 select the day of the week to go along with the day_of_month parameter. 0=Sun, 1=Mon,
+            2=Tue, 3=Wed, 4=Thur, 5=Fri, 6=Sat
         month_of_year: int, optional (default=0)
-            Only used when on_each == 0 while repeat_units is set to 7. See chart for applicable days and how they add together
+            Only used when on_each == 0 while repeat_units is set to 7. See chart for applicable days and how they add
+            together
         days_of_month: int, optional (default=0)
-            Only used when on_each is == 0 while repeat_units is set to 6. See chart for applicable days and how they add together
+            Only used when on_each is == 0 while repeat_units is set to 6. See chart for applicable days and how they
+            add together
         end_repeat_month: int, optional (default=0)
-            Month to end the repeat on. 0=Jan, 1=Feb, 2=Mar, 3=Apr, 4=May, 5=June, 6=July, 7=Aug, 8=Sep, 9=Oct, 10=Nov, 11=Dec
+            Month to end the repeat on. 0=Jan, 1=Feb, 2=Mar, 3=Apr, 4=May, 5=June, 6=July, 7=Aug, 8=Sep, 9=Oct, 10=Nov,
+            11=Dec
         end_repeat_day: int, optional (default=0)
             Day of the month to end the repeat on. 1-31
         end_repeat_year: int, optional (default=0)
@@ -500,18 +528,21 @@ class ControlByWeb:
         """
 
         params = {'spc0_settingsTableNum': 1 + self.__scheduled_added, 'stk0_enabled': 1, 'stk0_name': name,
-            'stk0_runMode': run_mode, 'stk0_startDateMonth': start_date_month, 'stk0_startDateDay': start_date_day,
-            'stk0_startDateYear': start_date_year, 'stk0_startTimeType': start_time_type,
-            'stk0_startTimeHour': start_time_hour, 'stk0_startTimeMin': start_time_min,
-            'stk0_startTimeSec': start_time_sec, 'stk0_actionIONum1': action1, 'stk0_actionFunc1': action1_function,
-            'stk0_actionOperand1': action1_function_argument, 'stk0_repeatUnits': repeat_units,
-            'stk0_repeatEvery': repeat_every, 'stk0_repeatEndType': end_repeat_type, 'stk0_operandIONum1': condition,
-            'stk0_compareOperator1': condition_operator, 'stk0_operandCompVal1': condition_value,
-            'stk0_deadband1': condition_deadband, 'stk0_onEach': on_each, 'stk0_ordinalDayOfMonth': day_of_month,
-            'stk0_dayType': day_type, 'stk0_monthsOfYear': month_of_year, 'stk0_daysOfMonth': days_of_month,
-            'stk0_endRepeatMonth': end_repeat_month, 'stk0_endRepeatDay': end_repeat_day,
-            'stk0_endRepeatYear': end_repeat_year, 'stk0_endRepeatHour': end_repeat_hour,
-            'stk0_endRepeatMin': end_repeat_minute, 'stk0_endRepeatSec': end_repeat_second}
+                  'stk0_runMode': run_mode, 'stk0_startDateMonth': start_date_month,
+                  'stk0_startDateDay': start_date_day,
+                  'stk0_startDateYear': start_date_year, 'stk0_startTimeType': start_time_type,
+                  'stk0_startTimeHour': start_time_hour, 'stk0_startTimeMin': start_time_min,
+                  'stk0_startTimeSec': start_time_sec, 'stk0_actionIONum1': action1,
+                  'stk0_actionFunc1': action1_function,
+                  'stk0_actionOperand1': action1_function_argument, 'stk0_repeatUnits': repeat_units,
+                  'stk0_repeatEvery': repeat_every, 'stk0_repeatEndType': end_repeat_type,
+                  'stk0_operandIONum1': condition,
+                  'stk0_compareOperator1': condition_operator, 'stk0_operandCompVal1': condition_value,
+                  'stk0_deadband1': condition_deadband, 'stk0_onEach': on_each, 'stk0_ordinalDayOfMonth': day_of_month,
+                  'stk0_dayType': day_type, 'stk0_monthsOfYear': month_of_year, 'stk0_daysOfMonth': days_of_month,
+                  'stk0_endRepeatMonth': end_repeat_month, 'stk0_endRepeatDay': end_repeat_day,
+                  'stk0_endRepeatYear': end_repeat_year, 'stk0_endRepeatHour': end_repeat_hour,
+                  'stk0_endRepeatMin': end_repeat_minute, 'stk0_endRepeatSec': end_repeat_second}
 
         self.__scheduled_added += 1
 
@@ -545,224 +576,288 @@ class ControlByWeb:
         TYPE
             Description
         """
+
         params = {'spc0_settingsTableNum': 1 + self.__conditional_added, 'ctk0_operandIONum1': condition1,
-            'ctk0_actionEmail1': action_email, 'ctk0_compareOperator1': condition1_comparison,
-            'ctk0_operandCompVal1': condition1_value, 'ctk0_deadband1': dead_pan, 'ctk0_enabled': 1, 'ctk0_name': name,
-            'ctk0_actionIONum1': action1, 'ctk0_actionFunc1': action1_function}
+                  'ctk0_actionEmail1': action_email, 'ctk0_compareOperator1': condition1_comparison,
+                  'ctk0_operandCompVal1': condition1_value, 'ctk0_deadband1': dead_pan, 'ctk0_enabled': 1,
+                  'ctk0_name': name,
+                  'ctk0_actionIONum1': action1, 'ctk0_actionFunc1': action1_function}
 
         self.__conditional_added += 1
 
         return self.__send_cbw_update("POST", self.__task_update_endpoint, data=params)
 
-    def update_logging(self, enable_logging, logging_interval=(20, 0), power_up_state=1, relay1=(0, 0), relay2=(0, 0),
-                       relay3=(0, 0), relay4=(0, 0), digital1=(0, 0), digital2=(0, 0), digital3=(0, 0), digital4=(0, 0),
-                       vin=(0, 0), register=(0, 0), one_wire=(0, 0), xml_logging=0, modbus_logging=0, snmp_logging=0,
-                       email_logging=0, email_address=0, daily_send=(10, 0)):
-        """Summary
+    def update_logging(self, enable_logging, logging_start=(0, 0), logging_interval=(20, 0), power_up_state=1,
+                       relay1=(0, 0), relay2=(0, 0), relay3=(0, 0), relay4=(0, 0), digital1=(0, 0), digital2=(0, 0),
+                       digital3=(0, 0), digital4=(0, 0), vin=(0, 0, 2), register=(0, 0, 2), one_wire=(0, 0, 2),
+                       xml_logging=0, modbus_logging=0, snmp_logging=0, email_logging=0,
+                       daily_send=(10, 0), email_addrs=0, exclude_filter=0, ftp_hostname="192.168.1.15", ftp_security=0,
+                       ftp_port=21, ftp_username="username", ftp_password="password", ftp_filename="logs/log.txt",
+                       ftp_enable=0):
+        """Update logging information. Some parameters in this function use tuples to make so there aren't as
+        many parameters. The usual documentation for these tuples is just (reasonForParam1, reasonForParam2).
 
         Parameters
         ----------
-        enable_logging : TYPE
-            Description
-        logging_interval : tuple, optional
-            Description
-        power_up_state : int, optional
-            Description
-        relay1 : tuple, optional
-            Description
-        relay2 : tuple, optional
-            Description
-        relay3 : tuple, optional
-            Description
-        relay4 : tuple, optional
-            Description
-        digital1 : tuple, optional
-            Description
-        digital2 : tuple, optional
-            Description
-        digital3 : tuple, optional
-            Description
-        digital4 : tuple, optional
-            Description
-        vin : tuple, optional
-            Description
-        register : tuple, optional
-            Description
-        one_wire : tuple, optional
-            Description
-        xml_logging : int, optional
-            Description
-        modbus_logging : int, optional
-            Description
-        snmp_logging : int, optional
-            Description
-        email_logging : int, optional
-            Description
-        email_address : int, optional
-            Description
-        daily_send : tuple, optional
-            Description
+        enable_logging : int
+            Enable logging on this Control by Web
+        logging_start : tuple, optional (default=(0, 0))
+            Time of day the logging should start. The format of this parameter is as follows (startHour, StartMinute).
+            startHour is a number 0-23 inclusive and startMinute is a number 0-59 inclusive
+        logging_interval : tuple, optional (default=(20, 0))
+            The interval of logging used. The format of this parameter is as follows (logRate, logUnits). logRate seems
+            to not have a limit and is dependent upon logUnits. logUnits is an int 0=3 inclusive where 0=Minutes,
+            1=Hours, 2=Days, 3=Event Only
+        power_up_state : int, optional (default=1)
+            If 1 the logging will start out Running. If 0 the logging will start out Paused
+        relay1 : tuple, optional (default=0, 0)
+            Set logging events for relay 1. The format of this parameter is as follows (log, triggerLogEvent). If log is
+            set to 1 it enables logging for relay 1. If triggerLogEvent is set to 1 it triggers a log event for relay 1.
+            If either of them are 0 it disables the functionality
+        relay2 : tuple, optional (default(0, 0))
+            Set logging events for relay 2. The format of this parameter is as follows (log, triggerLogEvent). If log is
+            set to 1 it enables logging for relay 2. If triggerLogEvent is set to 1 it triggers a log event for relay 2.
+            If either of them are 0 it disables the functionality
+        relay3 : tuple, optional (default=(0, 0))
+            Set logging events for relay 3. The format of this parameter is as follows (log, triggerLogEvent). If log is
+            set to 1 it enables logging for relay 3. If triggerLogEvent is set to 1 it triggers a log event for relay 3.
+            If either of them are 0 it disables the functionality
+        relay4 : tuple, optional (default=(0, 0))
+            Set logging events for relay 4. The format of this parameter is as follows (log, triggerLogEvent). If log is
+            set to 1 it enables logging for relay 4. If triggerLogEvent is set to 1 it triggers a log event for relay 4.
+            If either of them are 0 it disables the functionality
+        digital1 : tuple, optional (default=(0, 0))
+            Set logging events for digital 1. The format of this parameter is as follows (log, triggerLogEvent). If log
+            is set to 1 it enables logging for digital 1. If triggerLogEvent is set to 1 it triggers a log event for
+            digital 1. If either of them are 0 it disables the functionality
+        digital2 : tuple, optional (default=(0, 0))
+            Set logging events for digital 2. The format of this parameter is as follows (log, triggerLogEvent). If log
+            is set to 1 it enables logging for digital 2. If triggerLogEvent is set to 1 it triggers a log event for
+            digital 2. If either of them are 0 it disables the functionality
+        digital3 : tuple, optional (default=(0, 0))
+            Set logging events for digital 3. The format of this parameter is as follows (log, triggerLogEvent). If log
+            is set to 1 it enables logging for digital 3. If triggerLogEvent is set to 1 it triggers a log event for
+            digital 3. If either of them are 0 it disables the functionality
+        digital4 : tuple, optional (default=(0, 0))
+            Set logging events for digital 4. The format of this parameter is as follows (log, triggerLogEvent). If log
+            is set to 1 it enables logging for digital 4. If triggerLogEvent is set to 1 it triggers a log event for
+            digital 4. If either of them are 0 it disables the functionality
+        vin : tuple, optional (default=(0, 0, 2))
+            Set VIN logging events. The format of this parameter is as follows (log, triggerLogEvent, logDelta). If log
+            is set to 1 it enables logging for VIN. If triggerLogEvent is set to 1 it triggers a log event for
+            VIN. If either of them are 0 it disables the functionality. logDelta works a little differently in that it
+            is any int, but it defaults to 2
+        register : tuple, optional (default=(0, 0, 2))
+            Set REGISTER logging events. The format of this parameter is as follows (log, triggerLogEvent, logDelta).
+            If log is set to 1 it enables logging for REGISTER. If triggerLogEvent is set to 1 it triggers a log event
+            for REGISTER. If either of them are 0 it disables the functionality. logDelta works a little differently in
+            that it is any int, but it defaults to 2
+        one_wire : tuple, optional (default=(0, 0, 2))
+            Set ONE-WIRE logging events. The format of this parameter is as follows (log, triggerLogEvent, logDelta).
+            If log is set to 1 it enables logging for ONE-WIRE. If triggerLogEvent is set to 1 it triggers a log event
+            for ONE-WIRE. If either of them are 0 it disables the functionality. logDelta works a little differently in
+            that it is any int, but it defaults to 2
+        xml_logging : int, optional (default=0)
+            Enable XML/JSON logging. 1=Enable, 0=Disable
+        modbus_logging : int, optional (default=0)
+            Enable Modbus logging. 1=Enable, 0=Disable
+        snmp_logging : int, optional (default=0)
+            Enable SNMP logging. 1=Enable, 0=Disable
+        email_logging : int, optional (default=1)
+            Enable log files to be sent over email. 1=Enable, 0=Disable
+        daily_send : tuple, optional (default=(10, 0))
+            Time of day the logging file will send over email. The format of this parameter is as follows
+            (startHour, StartMinute). startHour is a number 0-23 inclusive and startMinute is a number 0-59 inclusive
+        email_addrs : int, optional (default=0)
+            The email or emails to send the log files to. In order to determine what email address you want to send all
+            you have to do it get all the emails you want to send. Say I have 4 emails ['email1', 'email2', 'email3',
+            'email4']. In order to send just email3 all we have to do is know two things. First the email number is 3.
+            So in order to get the program id for this email all you have to do it 2^x where x=the email number - 1. So
+            to just send the log email to email3 it would be 2^2 or 4. So in order to add multiple emails you would add
+            the individual values to each other for each email. For example, to send an email to email4 and email3 the
+            equation would look like this. email3=2 email4=3. 2^3 + 2^2 = 12. So 12 would be the value that is sent
+        exclude_filter : int, optional (default=0)
+            Exclude some logged requests. 0=None, 1=Reads, 2=Writes
+        ftp_hostname : str, optional (default="192.168.1.15")
+            IP address of ftp server to send the log file to
+        ftp_security : int, optional (default=0)
+            Sets ftp security method. 0=None, 1=Implicit, 2=Explicit TLS
+        ftp_port : int, optional (default=21)
+            FTP port to use
+        ftp_username : str, optional (default="username")
+            FTP username to use to authenticate
+        ftp_password : str, optional (default="password)
+            FTP password to use to authenticate
+        ftp_filename : str, optional (default="log/log.txt")
+            FTP remote location to put the log file
+        ftp_enable : int, optional (default=0)
+            Enable FTP to transfer log files to remote machine
+
 
         Returns
         -------
-        TYPE
-            Description
+        bool
+            If request was successfully
         """
-        params = {"gen1_loggingEnabled": enable_logging, "gen1_logRate": logging_interval[0],
-            "gen1_logUnits": logging_interval[1], "gen1_logPowerUpState": power_up_state,
-            "gen1_logDailySendHour": daily_send[0], "gen1_logDailySendMin": daily_send[1],
-            "gen1_logEmailAddrNum": email_address, "i1_l": relay1[0], "i1_tL": relay1[1], "i2_l": relay2[0],
-            "i2_tL": relay2[1], "i3_l": relay3[0], "i3_tL": relay3[1], "i4_l": relay4[0], "i4_tL": relay4[1],
-            "i5_l": digital1[0], "i5_tL": digital1[1], "i6_l": digital2[0], "i6_tL": digital2[1], "i7_l": digital3[0],
-            "i7_tL": digital3[1], "i8_l": digital4[0], "i8_tL": digital4[1], "i9_l": vin[0], "i9_tL": vin[1],
-            "i10_l": register[0], "i10_tL": register[1], "i11_l": one_wire[0], "i11_tL": one_wire[1],
-            "gen1_logXmlReq": xml_logging, "gen1_logModbusReq": modbus_logging, "gen1_logSnmpReq": snmp_logging,
-            "gen1_emailLogEnabled": email_logging, }
+
+        params = {"gen1_loggingEnabled": enable_logging, "gen1_logStartHour": logging_start[0],
+                  "gen1_logStartMin": logging_start[1], "gen1_logRate": logging_interval[0],
+                  "gen1_logUnits": logging_interval[1], "gen1_logPowerUpState": power_up_state,
+                  "gen1_logDailySendHour": daily_send[0], "gen1_logDailySendMin": daily_send[1],
+                  "i1_l": digital1[0], "i1_tL": digital1[1], "i2_l": digital2[0],
+                  "i2_tL": digital2[1], "i3_l": digital3[0], "i3_tL": digital3[1], "i4_l": digital4[0],
+                  "i4_tL": digital4[1], "i5_l": relay1[0], "i5_tL": relay1[1], "i6_l": relay2[0], "i6_tL": relay2[1],
+                  "i7_l": relay3[0], "i7_tL": relay3[1], "i8_l": relay4[0], "i8_tL": relay4[1], "i9_l": one_wire[0],
+                  "i9_tL": one_wire[1], "i9_lD": one_wire[2], "i10_l": register[0], "i10_tL": register[1],
+                  "i10_lD": register[2], "i11_l": vin[0], "i11_tL": vin[1], "i11_lD": vin[2],
+                  "gen1_logXmlReq": xml_logging, "gen1_logModbusReq": modbus_logging, "gen1_logSnmpReq": snmp_logging,
+                  "gen1_emailLogEnabled": email_logging, "gen1_logEmailAddrNum": email_addrs,
+                  "gen1_logRWFilter": exclude_filter, "gen1_ftpHostName": ftp_hostname,
+                  "gen1_ftpSecurity": ftp_security, "gen1_ftpPort": ftp_port, "gen1_ftpUserName": ftp_username,
+                  "gen1_ftpPassword": ftp_password, "gen1_ftpFilename": ftp_filename, "gen1_ftpLogEnabled": ftp_enable}
 
         return self.__send_cbw_update("POST", self.__logging_endpoint, data=params)
 
-    def add_control_page_element(self, id):
-        """Summary
+    def add_control_page_element(self, element_id):
+        """Add a control page element to the control page
 
         Parameters
         ----------
-        id : TYPE
-            Description
+        element_id : int
+            The control page element to add. There doesn't seem to be a structure to any of the elements besides
+            that 5=Relay1, 6=Relay2, 7=Relay3, 8=Relay4
 
         Returns
         -------
-        TYPE
-            Description
+        bool
+            If request was successfully
         """
-        params = {'spc0_addControlIOID': id}
+
+        params = {'spc0_addControlIOID': element_id}
 
         return self.__send_cbw_update("POST", self.__control_page_endpoint, data=params)
 
-    def delete_control_page_element(self, id):
-        """Summary
+    def delete_control_page_element(self, element_id):
+        """Deletes a control page element from the control page
 
         Parameters
         ----------
-        id : TYPE
-            Description
+        element_id : int
+            The control page element to delete. There doesn't seem to be a structure to any of the elements besides
+            that 5=Relay1, 6=Relay2, 7=Relay3, 8=Relay4
 
         Returns
         -------
-        TYPE
-            Description
+        bool
+            If request was successfully
         """
-        params = {'spc0_delControl': id}
+
+        params = {'spc0_delControl': element_id}
 
         return self.__send_cbw_update("POST", self.__control_page_endpoint, data=params)
 
     def update_control_page_element(self, table_number, io_type_id=None, enabled=None, status_enabled=None,
                                     on_status_color=None, off_status_color=None, on_button_text=None,
-                                    on_button_value=None, on_button_enabled=None, off_button_text=None,
-                                    off_button_value=None, off_button_enabled=None, toggle_button_text=None,
-                                    toggle_button_value=None, toggle_enabled=None, pulse_button_text=None,
-                                    pulse_button_value=None, pulse_button_enabled=None):
-        """Summary
+                                    on_button_enabled=None, off_button_text=None, off_button_enabled=None,
+                                    toggle_button_text=None, toggle_enabled=None, pulse_button_text=None,
+                                    pulse_button_enabled=None):
+        """Update a single control page element
 
         Parameters
         ----------
-        table_number : TYPE
-            Description
-        io_type_id : None, optional
-            Description
-        enabled : None, optional
-            Description
-        status_enabled : None, optional
-            Description
-        on_status_color : None, optional
-            Description
-        off_status_color : None, optional
-            Description
-        on_button_text : None, optional
-            Description
-        on_button_value : None, optional
-            Description
-        on_button_enabled : None, optional
-            Description
-        off_button_text : None, optional
-            Description
-        off_button_value : None, optional
-            Description
+        table_number : int
+            The control page element being updated
+        io_type_id : None, optional (default=None)
+            Seems that the only time this is set is when a relay IO is being updated. In this case io_type_id=1
+        enabled : None, optional (default=None)
+            If True, it enables the control page element
+        status_enabled : None, optional (default=None)
+            If True, it will show the status of the current control page element. Otherwise, it will not show the status
+        on_status_color : None, optional (default=None)
+            The on status color for the control page element. Can be a number from 0-4 which corresponds to Red, Green,
+            Yellow, Blue, White accordingly
+        off_status_color : None, optional (default=None)
+            The off status color for the control page element. Can be a number from 0-4 which corresponds to Red, Green,
+            Yellow, Blue, White accordingly
+        on_button_text : None, optional (default=None)
+            Text displayed for the ON Button in the control page element
+        on_button_enabled : None, optional (default=None)
+            Displays the ON Button with the provided text in the control page element being updated
+        off_button_text : None, optional (default=None)
+            Text displayed for the OFF Button in the control page element
         off_button_enabled : None, optional
-            Description
-        toggle_button_text : None, optional
-            Description
-        toggle_button_value : None, optional
-            Description
-        toggle_enabled : None, optional
-            Description
-        pulse_button_text : None, optional
-            Description
-        pulse_button_value : None, optional
-            Description
-        pulse_button_enabled : None, optional
-            Description
+            Displays the OFF Button with the provided text in the control page element being updated
+        toggle_button_text : None, optional (default=None)
+            Text displayed for the TOGGLE Button in the control page element
+        toggle_enabled : None, optional (default=None)
+            Displays the TOGGLE Button with the provided text in the control page element being updated
+        pulse_button_text : None, optional (default=None)
+            Text displayed for the PULSE Button in the control page element
+        pulse_button_enabled : None, optional (default=None)
+            Displays the PULSE Button with the provided text in the control page element being updated
 
         Returns
         -------
-        TYPE
-            Description
+        bool
+            If request was successfully
         """
+
         params = {"spc0_settingsTableNum": table_number, "ios0_ioTypeID": io_type_id, "ctl0_enabled": enabled,
-            "ctl0_statusEnabled": status_enabled, "ctl0_onStatusColor": on_status_color,
-            "ctl0_offStatusColor": off_status_color, "ctl0_buttonText1": on_button_text,
-            "ctl0_buttonValue1": on_button_value, "ctl0_buttonEnabled1": on_button_enabled,
-            "ctl0_buttonText2": off_button_text, "ctl0_buttonValue2": off_button_value,
-            "ctl0_buttonEnabled2": off_button_enabled, "ctl0_buttonEnabled3": pulse_button_enabled,
-            "ctl0_buttonText3": pulse_button_text, "ct10_buttonValue3": pulse_button_value,
-            "ctl0_buttonText4": toggle_button_text, "ctl0_buttonEnabled4": toggle_enabled,
-            "ct10_buttonValue4": toggle_button_value}
+                  "ctl0_statusEnabled": status_enabled, "ctl0_onStatusColor": on_status_color,
+                  "ctl0_offStatusColor": off_status_color, "ctl0_buttonText1": on_button_text,
+                  "ctl0_buttonEnabled1": on_button_enabled, "ctl0_buttonText2": off_button_text,
+                  "ctl0_buttonEnabled2": off_button_enabled, "ctl0_buttonEnabled3": pulse_button_enabled,
+                  "ctl0_buttonText3": pulse_button_text, "ctl0_buttonText4": toggle_button_text,
+                  "ctl0_buttonEnabled4": toggle_enabled}
 
         return self.__send_cbw_update("POST", self.__control_page_endpoint, data=params)
 
-    def submit_control_page(self, page_header="ControlByWeb", refresh_rate=3, page_footer="Insert Something Here",
+    def submit_control_page(self, page_header="ControlByWeb", refresh_rate=3, page_footer="",
                             show_custom_logo=1, control_page_order=""):
-        """Summary
+        """Submit control page updates
 
         Parameters
         ----------
-        page_header : str, optional
-            Description
-        refresh_rate : int, optional
-            Description
-        page_footer : str, optional
-            Description
-        show_custom_logo : int, optional
-            Description
-        control_page_order : str, optional
-            Description
+        page_header : str, optional (default=ControlByWeb)
+            Text displayed as the page header of the information view
+        refresh_rate : int, optional (default=3)
+            The refresh rate in seconds to periodically update the control page
+        page_footer : str, optional (default="")
+            Text displayed on the bottom of the information view
+        show_custom_logo : int, optional (default=1)
+            If 1 then it will show the custom logo in the home page
+        control_page_order : str, optional (default="")
+            The order of the control page. This number has not been able to be replicated reliability.
 
         Returns
         -------
-        TYPE
-            Description
+        bool
+            If request was successfully
         """
+
         params = {"gen1_ctrlPageHeader": page_header, "gen1_ctrlPageRefreshRate": refresh_rate,
-            "gen1_ctrlPageFooter": page_footer, "gen1_showCustomLogo": show_custom_logo,
-            "spc0_ctrlOrder": control_page_order}
+                  "gen1_ctrlPageFooter": page_footer, "gen1_showCustomLogo": show_custom_logo,
+                  "spc0_ctrlOrder": control_page_order}
 
         return self.__send_cbw_update("POST", self.__control_page_endpoint, data=params)
 
     def get_device_information(self):
-        """Summary
+        """Get device information
 
         Returns
         -------
-        TYPE
-            Description
+        Request.response
+            Raw request device information
         """
         return self.__send_cbw_update("GET", self.__overview_endpoint, data={}, check=False)
 
     def get_serial_number(self):
-        """Summary
+        """Get serial number
 
         Returns
         -------
-
+        str
+            Serial number
         """
 
         device_information = self.get_device_information()
@@ -770,43 +865,50 @@ class ControlByWeb:
             return device_information.json()['x spc1_serNum'][0]
 
     def get_control_page_details(self, table_number):
-        """Summary
+        """Get specific control page element details
 
         Parameters
         ----------
-        table_number : TYPE
-            Description
+        table_number : int
+            The specific control page element to get the details about
 
         Returns
         -------
-        TYPE
-            Description
+        Request.response
+            The response of the Control by Web
         """
+
         params = {'spc1_settingsTableNum': table_number}
 
         return self.__send_cbw_update("GET", self.__edit_control_element_endpoint, params=params, check=False)
 
     def get_active_result_of_control_page(self):
-        """Summary
+        """Get the current control page elements and configurations
 
         Returns
         -------
-        TYPE
-            Description
+        Request.response
+            The response of the Control by Web
         """
+
         params = {'showUnits': 1, 'showColors': 1}
 
         return self.__send_cbw_update("GET", self.__relay_update_endpoint, params=params, check=False)
 
     def upload_basic_script(self, file_location, script_enabled=0):
-        """Summary
+        """Uploads a basic script to the control by web
 
         Parameters
         ----------
-        file_location : TYPE
-            Description
+        file_location : str or bytes
+            A str of the location of the file or a bytes object
         script_enabled : int, optional
-            Description
+            Enable the uploaded script to run
+
+        Returns
+        -------
+        Request.response
+            The response of the Control by Web
         """
 
         if not os.path.isfile(file_location) and isinstance(file_location, bytes):
@@ -816,3 +918,8 @@ class ControlByWeb:
 
         params = {'fileBasicScript': file_location, 'gen1_basicScriptEnabled': script_enabled}
         return self.__send_cbw_update("POST", self.__file_upload_endpoint, files=params, check=False)
+
+
+if __name__ == '__main__':
+    cbw = ControlByWeb('192.168.1.2', 'admin', 'Avscle2010',
+                       proxies={'http': 'http://127.0.0.1:8080', 'https': 'https://127.0.0.1:8080'})
